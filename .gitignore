@@ -12,3 +12,5 @@
 public/uploads/savegame/
 
 public/Party.json
+
+.env
