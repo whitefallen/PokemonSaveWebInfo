@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello IndexController!{% endblock %}
+
+{% block body %}
+<div>
+    <h1>Hello {{ controller_name }}! ✅</h1>
+    <div>
+        {{ form_start(form) }}
+        {# ... #}
+
+        {{ form_row(form.uuid) }}
+        {{ form_end(form) }}
+    </div>
+</div>
+{% endblock %}
