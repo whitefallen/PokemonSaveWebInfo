@@ -7,5 +7,12 @@
     <div>
         UUID: {{ uuid }}
     </div>
+    <div>
+        {{ form_start(form) }}
+        {# ... #}
+        {{ form_row(form.session_name) }}
+        {{ form_row(form.savegame) }}
+        {{ form_end(form) }}
+    </div>
 </div>
 {% endblock %}
