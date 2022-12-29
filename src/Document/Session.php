@@ -2,7 +2,9 @@
 
 namespace App\Document;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
+use Doctrine\ODM\MongoDB\Mapping\Annotations\EmbedMany;
 
 /**
  * @MongoDB\Document
@@ -10,7 +12,7 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 class Session
 {
     /**
-     * @MongoDB\id
+     * @MongoDB\Id()
      */
     private ?string $id = null;
 
@@ -28,6 +30,15 @@ class Session
      * @MongoDB\Field(type="date_immutable")
      */
     private ?\DateTimeImmutable $created_at = null;
+
+    /**
+     * @EmbedMany(targetDocument=SaveState::class)
+     */
+    private ArrayCollection $timeline;
+
+    public function __construct() {
+        $this->timeline = new ArrayCollection();
+    }
 
     public function getId(): ?string
     {
@@ -68,5 +79,21 @@ class Session
         $this->created_at = $created_at;
 
         return $this;
+    }
+
+    /**
+     * @return ArrayCollection|null
+     */
+    public function getTimeline(): ?ArrayCollection
+    {
+        return $this->timeline;
+    }
+
+    /**
+     * @param ArrayCollection|null $timeline
+     */
+    public function setTimeline(?ArrayCollection $timeline): void
+    {
+        $this->timeline = $timeline;
     }
 }

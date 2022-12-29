@@ -16,3 +16,5 @@ public/Party.json
 .env
 
 .idea/
+
+/public/Party*
