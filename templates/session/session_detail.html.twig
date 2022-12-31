@@ -6,6 +6,7 @@
 <div>
     <div>
         <div style="padding: 20px">
+            {% if session is not null %}
             <div>
                 Session UUID: {{ session.uuid }}
             </div>
@@ -35,6 +36,7 @@
                     </div>
                 {% endfor %}
             </div>
+            {% endif %}
             {{ form_start(form) }}
             {# ... #}
             <div>

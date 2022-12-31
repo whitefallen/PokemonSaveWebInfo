@@ -19,7 +19,7 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Routing\Annotation\Route;
 
-class IndexController extends AbstractController
+class SessionController extends AbstractController
 {
     //private DocumentManager $dm;
     private DocumentRepository $sessionRepository;
@@ -32,6 +32,9 @@ class IndexController extends AbstractController
     #[Route('/session', name: 'app_index_session')]
     public function session(Request $request): Response
     {
+        /**
+         * Create Empty Session shell here, and fill it up later in detail 
+         */
         $uuid = ['uuid' => null];
         $form = $this->createForm(SessionType::class, $uuid);
         $allSessions = $this->sessionRepository->findAll();
@@ -40,8 +43,8 @@ class IndexController extends AbstractController
             $generatedUUID = $form->get('uuid')->getData();
             return $this->redirectToRoute('app_index_session_new', ['uuid' => $generatedUUID]);
         }
-        return $this->render('index/session.html.twig', [
-            'controller_name' => 'IndexController',
+        return $this->render('session/session.html.twig', [
+            'controller_name' => 'SessionController',
             'form' => $form,
             'sessions' => $allSessions,
         ]);
@@ -80,8 +83,8 @@ class IndexController extends AbstractController
             $dm->persist($session);
             $dm->flush();
         }
-        return $this->render('index/session_detail.html.twig', [
-            'controller_name' => 'IndexController',
+        return $this->render('session/session_detail.html.twig', [
+            'controller_name' => 'SessionController',
             'uuid' => $uuid,
             'form' => $form,
             'session' => $session
@@ -91,8 +94,8 @@ class IndexController extends AbstractController
     #[Route('/', name: 'app')]
     public function index(): Response
     {
-        return $this->render('index/index.html.twig', [
-            'controller_name' => 'IndexController',
+        return $this->render('session/index.html.twig', [
+            'controller_name' => 'SessionController',
         ]);
     }
 
@@ -133,7 +136,4 @@ class IndexController extends AbstractController
         return json_decode($process->getOutput(), true, 512, JSON_THROW_ON_ERROR);
     }
 
-    private function updateSessionData($session) {
-
-    }
 }
