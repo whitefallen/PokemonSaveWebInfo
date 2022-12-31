@@ -20,7 +20,7 @@ class SaveState
     /**
      * @MongoDB\Field(type="string")
      */
-    private ?string $file_identifier = null;
+    private ?string $fileIdentifier = null;
 
     /**
      * @EmbedMany(targetDocument=Pokemon::class)
@@ -34,7 +34,7 @@ class SaveState
     /**
      * @MongoDB\Field(type="string")
      */
-    private ?string $trainer_name = null;
+    private ?string $trainerName = null;
 
     /**
      * @MongoDB\Field(type="string")
@@ -44,12 +44,12 @@ class SaveState
     /**
      * @MongoDB\Field(type="string")
      */
-    private ?string $uploader_name = null;
+    private ?string $uploaderName = null;
 
     /**
      * @MongoDB\Field(type="date_immutable")
      */
-    private ?\DateTimeImmutable $uploaded_at = null;
+    private ?\DateTimeImmutable $uploadedAt = null;
 
     public function getId(): ?string
     {
@@ -61,7 +61,7 @@ class SaveState
      */
     public function getTrainerName(): ?string
     {
-        return $this->trainer_name;
+        return $this->trainerName;
     }
 
     /**
@@ -69,7 +69,7 @@ class SaveState
      */
     public function setTrainerName(?string $trainer_name): void
     {
-        $this->trainer_name = $trainer_name;
+        $this->trainerName = $trainer_name;
     }
 
     /**
@@ -77,7 +77,7 @@ class SaveState
      */
     public function getFileIdentifier(): ?string
     {
-        return $this->file_identifier;
+        return $this->fileIdentifier;
     }
 
     /**
@@ -85,7 +85,7 @@ class SaveState
      */
     public function setFileIdentifier(?string $file_identifier): void
     {
-        $this->file_identifier = $file_identifier;
+        $this->fileIdentifier = $file_identifier;
     }
 
     /**
@@ -110,7 +110,7 @@ class SaveState
      */
     public function getUploaderName(): ?string
     {
-        return $this->uploader_name;
+        return $this->uploaderName;
     }
 
     /**
@@ -118,7 +118,7 @@ class SaveState
      */
     public function setUploaderName(?string $uploader_name): void
     {
-        $this->uploader_name = $uploader_name;
+        $this->uploaderName = $uploader_name;
     }
 
     /**
@@ -126,7 +126,7 @@ class SaveState
      */
     public function getUploadedAt(): ?\DateTimeImmutable
     {
-        return $this->uploaded_at;
+        return $this->uploadedAt;
     }
 
     /**
@@ -134,7 +134,7 @@ class SaveState
      */
     public function setUploadedAt(?\DateTimeImmutable $uploaded_at): void
     {
-        $this->uploaded_at = $uploaded_at;
+        $this->uploadedAt = $uploaded_at;
     }
 
     /**

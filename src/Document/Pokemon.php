@@ -17,7 +17,7 @@ class Pokemon
     /**
      * @MongoDB\Field(type="int")
      */
-    private ?int $species_id = null;
+    private ?int $speciesId = null;
     /**
      * @MongoDB\Field(type="string")
      */
@@ -32,7 +32,7 @@ class Pokemon
      */
     public function getSpeciesId(): ?int
     {
-        return $this->species_id;
+        return $this->speciesId;
     }
 
     /**
@@ -40,7 +40,7 @@ class Pokemon
      */
     public function setSpeciesId(?int $species_id): void
     {
-        $this->species_id = $species_id;
+        $this->speciesId = $species_id;
     }
 
     /**

@@ -33,7 +33,6 @@ class SaveGameType extends AbstractType
                 ],
             ])
             ->add('player_name', TextType::class, ['label' => 'Player Name'])
-            ->add('session_name', TextType::class, ['label' => 'Session Name'])
             ->add('save', SubmitType::class)
             // ...
         ;

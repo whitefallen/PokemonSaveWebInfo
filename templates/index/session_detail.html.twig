@@ -5,15 +5,45 @@
 {% block body %}
 <div>
     <div>
-        UUID: {{ uuid }}
-    </div>
-    <div>
-        {{ form_start(form) }}
-        {# ... #}
-        {{ form_row(form.session_name) }}
-        {{ form_row(form.player_name) }}
-        {{ form_row(form.savegame) }}
-        {{ form_end(form) }}
+        <div style="padding: 20px">
+            <div>
+                Session UUID: {{ session.uuid }}
+            </div>
+            <div>
+                SessionName: {{ session.name }} - {{ session.createdAt|date("m/d/Y")}}
+            </div>
+            <div style="margin-top: 5px">
+                {% for timeslot in session.timeline %}
+                    <div>
+                        File: {{ timeslot.fileIdentifier }}
+                    </div>
+                    <div>
+                        TrainerName: {{ timeslot.trainerName }}
+                    </div>
+                    <div>
+                        PlayTime: {{ timeslot.playtime }}
+                    </div>
+                    <div>
+                        Uploader: {{ timeslot.uploaderName }} - {{ timeslot.uploadedAt|date("m/d/Y") }}
+                    </div>
+                    <div style="margin-bottom: 10px">
+                        {% for pokemon in timeslot.party %}
+                            <div>
+                                Pokemon: {{ pokemon.speciesId }} - {{ pokemon.nickname }} - {{ pokemon.level }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+            </div>
+            {{ form_start(form) }}
+            {# ... #}
+            <div>
+                Upload new SavePoint
+                {{ form_row(form.player_name) }}
+                {{ form_row(form.savegame) }}
+            </div>
+            {{ form_end(form) }}
+        </div>
     </div>
 </div>
 {% endblock %}

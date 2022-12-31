@@ -21,6 +21,12 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class IndexController extends AbstractController
 {
+    //private DocumentManager $dm;
+    private DocumentRepository $sessionRepository;
+    public function __construct(DocumentManager $dm) {
+        //$this->dm = $dm;
+        $this->sessionRepository = $dm->getRepository(Session::class);
+    }
     /**
      */
     #[Route('/session', name: 'app_index_session')]
@@ -28,6 +34,7 @@ class IndexController extends AbstractController
     {
         $uuid = ['uuid' => null];
         $form = $this->createForm(SessionType::class, $uuid);
+        $allSessions = $this->sessionRepository->findAll();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $generatedUUID = $form->get('uuid')->getData();
@@ -35,7 +42,8 @@ class IndexController extends AbstractController
         }
         return $this->render('index/session.html.twig', [
             'controller_name' => 'IndexController',
-            'form' => $form
+            'form' => $form,
+            'sessions' => $allSessions,
         ]);
     }
 
@@ -48,15 +56,15 @@ class IndexController extends AbstractController
         $file = ['savegame' => null];
         $form = $this->createForm(SaveGameType::class, [$file, $uuid]);
         $form->handleRequest($request);
+        $sessionRepository = $dm->getRepository(Session::class);
+        $session = $sessionRepository->findOneBy(['uuid' => $uuid]);
         if ($form->isSubmitted() && $form->isValid()) {
             $saveFile = $form->get('savegame')->getData();
             $sessionName = $form->get('session_name')->getData();
             $playerName = $form->get('player_name')->getData();
             /* @var $sessionRepository DocumentRepository */
-            $sessionRepository = $dm->getRepository(Session::class);
-            $session = $sessionRepository->findOneBy(['uuid' => $uuid]);
             if($session !== null ) {
-                var_dump($session->getId());
+                //var_dump($session->getId());
                 $session->setName($sessionName);
             } else {
                 $session = new Session();
@@ -72,7 +80,12 @@ class IndexController extends AbstractController
             $dm->persist($session);
             $dm->flush();
         }
-        return $this->render('index/session_detail.html.twig', ['controller_name' => 'IndexController', 'uuid' => $uuid, 'form' => $form]);
+        return $this->render('index/session_detail.html.twig', [
+            'controller_name' => 'IndexController',
+            'uuid' => $uuid,
+            'form' => $form,
+            'session' => $session
+        ]);
     }
 
     #[Route('/', name: 'app')]

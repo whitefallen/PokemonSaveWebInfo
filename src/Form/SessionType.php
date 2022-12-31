@@ -5,6 +5,7 @@ namespace App\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Uid\Uuid;
@@ -15,6 +16,7 @@ class SessionType extends AbstractType
     {
         $builder
             ->add('uuid', HiddenType::class, ['data' => Uuid::v7()])
+            ->add('session_name', TextType::class, ['label' => 'Session Name'])
             ->add('save', SubmitType::class, ['label' => 'New Session'])
         ;
     }

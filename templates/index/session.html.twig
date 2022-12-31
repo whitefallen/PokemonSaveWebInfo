@@ -8,9 +8,13 @@
     <div>
         {{ form_start(form) }}
         {# ... #}
-
         {{ form_row(form.uuid) }}
         {{ form_end(form) }}
+        <ul>
+        {% for session in sessions %}
+            <li><a href="{{path('app_index_session')}}/{{ session.uuid }}">{{ session.uuid }} {{ session.name }}</a></li>
+        {% endfor %}
+        </ul>
     </div>
 </div>
 {% endblock %}

@@ -29,7 +29,7 @@ class Session
     /**
      * @MongoDB\Field(type="date_immutable")
      */
-    private ?\DateTimeImmutable $created_at = null;
+    private ?\DateTimeImmutable $createdAt = null;
 
     /**
      * @EmbedMany(targetDocument=SaveState::class)
@@ -71,12 +71,12 @@ class Session
 
     public function getCreatedAt(): ?\DateTimeImmutable
     {
-        return $this->created_at;
+        return $this->createdAt;
     }
 
     public function setCreatedAt(\DateTimeImmutable $created_at): self
     {
-        $this->created_at = $created_at;
+        $this->createdAt = $created_at;
 
         return $this;
     }
