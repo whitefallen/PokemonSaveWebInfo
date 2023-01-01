@@ -82,9 +82,9 @@ class Session
     }
 
     /**
-     * @return ArrayCollection|null
+     * @return ArrayCollection
      */
-    public function getTimeline(): ?ArrayCollection
+    public function getTimeline(): ArrayCollection
     {
         return $this->timeline;
     }

@@ -21,26 +21,34 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class SessionController extends AbstractController
 {
-    //private DocumentManager $dm;
+    private DocumentManager $dm;
     private DocumentRepository $sessionRepository;
     public function __construct(DocumentManager $dm) {
-        //$this->dm = $dm;
+        $this->dm = $dm;
         $this->sessionRepository = $dm->getRepository(Session::class);
     }
+
     /**
+     * @throws MongoDBException
      */
     #[Route('/session', name: 'app_index_session')]
     public function session(Request $request): Response
     {
-        /**
-         * Create Empty Session shell here, and fill it up later in detail 
-         */
         $uuid = ['uuid' => null];
         $form = $this->createForm(SessionType::class, $uuid);
         $allSessions = $this->sessionRepository->findAll();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $generatedUUID = $form->get('uuid')->getData();
+            $sessionName = $form->get('session_name')->getData();
+            if($this->sessionRepository->findOneBy(['uuid' => $generatedUUID]) === null) {
+                $session = new Session();
+                $session->setUuid($generatedUUID);
+                $session->setName($sessionName);
+                $session->setCreatedAt(new \DateTimeImmutable());
+                $this->dm->persist($session);
+                $this->dm->flush();
+            }
             return $this->redirectToRoute('app_index_session_new', ['uuid' => $generatedUUID]);
         }
         return $this->render('session/session.html.twig', [
@@ -55,33 +63,22 @@ class SessionController extends AbstractController
      * @throws JsonException
      */
     #[Route('/session/{uuid}', name: 'app_index_session_new', defaults: ['uuid' => ''])]
-    public function newSession(Request $request, DocumentManager $dm,  FileUploader $fileUploader, string $uuid) : Response {
+    public function newSession(Request $request, FileUploader $fileUploader, string $uuid) : Response {
         $file = ['savegame' => null];
         $form = $this->createForm(SaveGameType::class, [$file, $uuid]);
         $form->handleRequest($request);
-        $sessionRepository = $dm->getRepository(Session::class);
-        $session = $sessionRepository->findOneBy(['uuid' => $uuid]);
+        $session = $this->sessionRepository->findOneBy(['uuid' => $uuid]);
         if ($form->isSubmitted() && $form->isValid()) {
             $saveFile = $form->get('savegame')->getData();
-            $sessionName = $form->get('session_name')->getData();
             $playerName = $form->get('player_name')->getData();
             /* @var $sessionRepository DocumentRepository */
-            if($session !== null ) {
-                //var_dump($session->getId());
-                $session->setName($sessionName);
-            } else {
-                $session = new Session();
-                $session->setUuid($uuid);
-                $session->setCreatedAt(new \DateTimeImmutable());
-            }
-            $session->setName($sessionName);
             if ($saveFile) {
                 $fileName = $fileUploader->upload($saveFile);
                 $fileData = $this->extractDataFromSaveFile($fileName);
-                $session->getTimeline()->add($this->createSaveStateFromFile($fileData,$fileName,$playerName));
+                $session?->getTimeline()->add($this->createSaveStateFromFile($fileData, $fileName, $playerName));
             }
-            $dm->persist($session);
-            $dm->flush();
+            $this->dm->persist($session);
+            $this->dm->flush();
         }
         return $this->render('session/session_detail.html.twig', [
             'controller_name' => 'SessionController',
