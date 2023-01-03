@@ -5,7 +5,7 @@ namespace App\Document;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 use Doctrine\ODM\MongoDB\Mapping\Annotations\EmbedMany;
-
+use Doctrine\Common\Collections\Collection;
 /**
  * @MongoDB\Document
  */
@@ -34,7 +34,7 @@ class Session
     /**
      * @EmbedMany(targetDocument=SaveState::class)
      */
-    private ArrayCollection $timeline;
+    private Collection $timeline;
 
     public function __construct() {
         $this->timeline = new ArrayCollection();
@@ -82,17 +82,17 @@ class Session
     }
 
     /**
-     * @return ArrayCollection
+     * @return Collection
      */
-    public function getTimeline(): ArrayCollection
+    public function getTimeline(): Collection
     {
         return $this->timeline;
     }
 
     /**
-     * @param ArrayCollection|null $timeline
+     * @param Collection|null $timeline
      */
-    public function setTimeline(?ArrayCollection $timeline): void
+    public function setTimeline(?Collection $timeline): void
     {
         $this->timeline = $timeline;
     }

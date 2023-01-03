@@ -8,6 +8,7 @@ use App\Document\Session;
 use App\Form\SaveGameType;
 use App\Form\SessionType;
 use App\Service\FileUploader;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\MongoDBException;
 use Doctrine\ODM\MongoDB\Repository\DocumentRepository;
@@ -49,7 +50,7 @@ class SessionController extends AbstractController
                 $this->dm->persist($session);
                 $this->dm->flush();
             }
-            return $this->redirectToRoute('app_index_session_new', ['uuid' => $generatedUUID]);
+            return $this->redirectToRoute('app_index_session_detail', ['uuid' => $generatedUUID]);
         }
         return $this->render('session/session.html.twig', [
             'controller_name' => 'SessionController',
@@ -62,7 +63,7 @@ class SessionController extends AbstractController
      * @throws MongoDBException
      * @throws JsonException
      */
-    #[Route('/session/{uuid}', name: 'app_index_session_new', defaults: ['uuid' => ''])]
+    #[Route('/session/{uuid}', name: 'app_index_session_detail', defaults: ['uuid' => ''])]
     public function newSession(Request $request, FileUploader $fileUploader, string $uuid) : Response {
         $file = ['savegame' => null];
         $form = $this->createForm(SaveGameType::class, [$file, $uuid]);
@@ -86,6 +87,38 @@ class SessionController extends AbstractController
             'form' => $form,
             'session' => $session
         ]);
+    }
+
+    #[Route('/session/delete/{uuid}', name: 'app_session_delete_session')]
+    public function deleteSession(Request $request, string $uuid) : Response {
+        $session = $this->sessionRepository->findOneBy(['uuid'=> $uuid]);
+        try {
+            $this->deleteHelper($session);
+        } catch (MongoDBException $e) {
+        }
+        return $this->redirectToRoute('app_index_session');
+    }
+
+    /**
+     * @throws MongoDBException
+     */
+    #[Route('/session/delete/timeslot/{identifier}', name: 'app_session_delete_timeslot')]
+    public function deleteTimeslot(Request $request, string $identifier) : Response {
+        $session = $this->sessionRepository->findOneBy(['timeline.fileIdentifier' => $identifier]);
+        $timeline = $session->getTimeline()->toArray();
+        $session->setTimeline(new ArrayCollection(array_filter($timeline, static fn(SaveState $timeslot) => ($timeslot->getFileIdentifier() !== $identifier))));
+        $this->dm->flush();
+        return $this->redirectToRoute('app_index_session_detail', ['uuid' => $session->getUuid()]);
+    }
+
+    /**
+     * @throws MongoDBException
+     */
+    private function deleteHelper($session) : void {
+        if($session !== null) {
+            $this->dm->remove($session);
+            $this->dm->flush();
+        }
     }
 
     #[Route('/', name: 'app')]

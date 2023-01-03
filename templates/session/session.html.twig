@@ -13,7 +13,7 @@
         {{ form_end(form) }}
         <ul>
         {% for session in sessions %}
-            <li><a href="{{path('app_index_session')}}/{{ session.uuid }}">{{ session.uuid }} {{ session.name }}</a></li>
+            <li><a href="{{path('app_index_session_detail', {uuid: session.uuid})}}">{{ session.uuid }} {{ session.name }}</a></li>
         {% endfor %}
         </ul>
     </div>

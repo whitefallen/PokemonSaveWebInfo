@@ -34,8 +34,10 @@
                             </div>
                         {% endfor %}
                     </div>
+                    <a href="{{ path("app_session_delete_timeslot", {identifier: timeslot.fileIdentifier}) }}"><button>Delete Timeslot</button></a>
                 {% endfor %}
             </div>
+            <a href="{{path('app_session_delete_session', {uuid: session.uuid})}}"><button>Delete Session</button></a>
             {% endif %}
             {{ form_start(form) }}
             {# ... #}
@@ -45,6 +47,7 @@
                 {{ form_row(form.savegame) }}
             </div>
             {{ form_end(form) }}
+            <a href="{{ path('app_index_session') }}"><button>Back</button></a>
         </div>
     </div>
 </div>
