@@ -5,15 +5,26 @@
 {% block body %}
 <div>
     <h1>Hello {{ controller_name }}! ✅</h1>
-    <div>
+    <div class="mt-4">
         {{ form_start(form) }}
-        {# ... #}
-        {{ form_row(form.session_name) }}
+        <div class="row row-no-gutters">
+            <div class="col-md-2">
+                {{ form_label(form.session_name) }}
+            </div>
+            <div class="col">
+                {{ form_widget(form.session_name) }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                {{ form_widget(form.save, {'attr': {'class': 'btn btn-primary'}}) }}
+            </div>
+        </div>
         {{ form_row(form.uuid) }}
         {{ form_end(form) }}
-        <ul>
+        <ul class="list-group mt-4">
         {% for session in sessions %}
-            <li><a href="{{path('app_index_session_detail', {uuid: session.uuid})}}">{{ session.uuid }} {{ session.name }}</a></li>
+            <li class="list-group-item"><a href="{{path('app_index_session_detail', {uuid: session.uuid})}}">{{ session.name }}</a></li>
         {% endfor %}
         </ul>
     </div>

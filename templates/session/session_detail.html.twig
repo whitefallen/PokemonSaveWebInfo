@@ -5,7 +5,7 @@
 {% block body %}
 <div>
     <div>
-        <div style="padding: 20px">
+        <div>
             {% if session is not null %}
             <div>
                 Session UUID: {{ session.uuid }}
@@ -13,41 +13,48 @@
             <div>
                 SessionName: {{ session.name }} - {{ session.createdAt|date("m/d/Y")}}
             </div>
-            <div style="margin-top: 5px">
+            <div class="my-2">
                 {% for timeslot in session.timeline %}
-                    <div>
-                        File: {{ timeslot.fileIdentifier }}
+                    <div class="my-5">
+                        <div>
+                            File: {{ timeslot.fileIdentifier }}
+                        </div>
+                        <div>
+                            TrainerName: {{ timeslot.trainerName }}
+                        </div>
+                        <div>
+                            PlayTime: {{ timeslot.playtime }}
+                        </div>
+                        <div>
+                            Uploader: {{ timeslot.uploaderName }} - {{ timeslot.uploadedAt|date("m/d/Y") }}
+                        </div>
+                        <div style="margin-bottom: 10px">
+                            {% for pokemon in timeslot.party %}
+                                <div>
+                                    Pokemon: {{ pokemon.speciesId }} - {{ pokemon.nickname }} - {{ pokemon.level }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <a href="{{ path("app_session_delete_timeslot", {identifier: timeslot.fileIdentifier}) }}"><button class="btn btn-danger">Delete Timeslot</button></a>
                     </div>
-                    <div>
-                        TrainerName: {{ timeslot.trainerName }}
-                    </div>
-                    <div>
-                        PlayTime: {{ timeslot.playtime }}
-                    </div>
-                    <div>
-                        Uploader: {{ timeslot.uploaderName }} - {{ timeslot.uploadedAt|date("m/d/Y") }}
-                    </div>
-                    <div style="margin-bottom: 10px">
-                        {% for pokemon in timeslot.party %}
-                            <div>
-                                Pokemon: {{ pokemon.speciesId }} - {{ pokemon.nickname }} - {{ pokemon.level }}
-                            </div>
-                        {% endfor %}
-                    </div>
-                    <a href="{{ path("app_session_delete_timeslot", {identifier: timeslot.fileIdentifier}) }}"><button>Delete Timeslot</button></a>
                 {% endfor %}
             </div>
-            <a href="{{path('app_session_delete_session', {uuid: session.uuid})}}"><button>Delete Session</button></a>
-            {% endif %}
-            {{ form_start(form) }}
-            {# ... #}
-            <div>
+            <div class="my-2">
+                {{ form_start(form) }}
                 Upload new SavePoint
                 {{ form_row(form.player_name) }}
-                {{ form_row(form.savegame) }}
+                <div class="my-2">
+                    {{ form_label(form.savegame, null, {'attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(form.savegame, {'attr': {'class': 'form-control'}}) }}
+                </div>
+                <div class="my-2 btn-group" role="group" aria-label="Basic example">
+                    {{ form_widget(form.save, {'attr': {'class': 'btn btn-primary'}}) }}
+                    <a href="{{ path('app_index_session') }}"><button class="btn btn-secondary">Back</button></a>
+                </div>
+                {{ form_end(form) }}
             </div>
-            {{ form_end(form) }}
-            <a href="{{ path('app_index_session') }}"><button>Back</button></a>
+            <a href="{{path('app_session_delete_session', {uuid: session.uuid})}}"><button class="btn btn-danger">Delete Session</button></a>
+            {% endif %}
         </div>
     </div>
 </div>

@@ -124,9 +124,12 @@ class SessionController extends AbstractController
     #[Route('/', name: 'app')]
     public function index(): Response
     {
+        /*
         return $this->render('session/index.html.twig', [
             'controller_name' => 'SessionController',
         ]);
+        */
+        return $this->redirectToRoute('app_index_session');
     }
 
     private function createPokemonFromFile($fileData): Pokemon
